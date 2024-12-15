@@ -6,21 +6,22 @@ import 'package:flutter_local_notification/local_notification_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await LocalNotificationService.init();
-  runApp(const MyApp());
+  runApp(const MyApp(title: "Default Flavor",));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final String title;
+  const MyApp({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: title,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: title),
     );
   }
 }
