@@ -88,6 +88,7 @@ class LocalNotificationService {
 
   // Scheduled Notification
   static Future<void> showScheduledNotification() async {
+    tz.initializeTimeZones();
     log(tz.local.name);
     log(tz.TZDateTime.now(tz.local).hour.toString());
     NotificationDetails details = const NotificationDetails(
@@ -102,7 +103,7 @@ class LocalNotificationService {
       iOS: DarwinNotificationDetails(),
     );
 
-    tz.initializeTimeZones();
+    //tz.initializeTimeZones();
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
         2,
@@ -120,6 +121,10 @@ class LocalNotificationService {
   static Future<void> cancelNotification(int id) async {
     // notifications can be canceled by ID and with or without TAG
     await flutterLocalNotificationsPlugin.cancel(id);
+  }
+
+  static Future<void> cancelAllNotifications() async {
+    await flutterLocalNotificationsPlugin.cancelAll();
   }
 }
 
