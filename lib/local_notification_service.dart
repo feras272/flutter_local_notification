@@ -1,11 +1,11 @@
 import 'dart:developer';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 
 class LocalNotificationService {
-
   static final LocalNotificationService _localNotificationService =
       LocalNotificationService._internal();
 
@@ -22,10 +22,22 @@ class LocalNotificationService {
   // fire when a notification has been tapped on
   // will trigger navigation to another page and display the payload associated with the notification.
   static foregroundNotificationResponse(
-      NotificationResponse notificationResponse) {}
+      NotificationResponse notificationResponse) {
+    log('notificationResponseType: ${notificationResponse.notificationResponseType}');
+    log('id: ${notificationResponse.id}');
+    log('actionId: ${notificationResponse.actionId}');
+    log('input: ${notificationResponse.input}');
+    log('payload: ${notificationResponse.payload}');
+  }
 
   static backgroundNotificationResponse(
-      NotificationResponse notificationResponse) {}
+      NotificationResponse notificationResponse) {
+    log('notificationResponseType: ${notificationResponse.notificationResponseType}');
+    log('id: ${notificationResponse.id}');
+    log('actionId: ${notificationResponse.actionId}');
+    log('input: ${notificationResponse.input}');
+    log('payload: ${notificationResponse.payload}');
+  }
 
   // Notification Initialization
   static Future<void> init() async {
@@ -91,16 +103,23 @@ class LocalNotificationService {
     tz.initializeTimeZones();
     log(tz.local.name);
     log(tz.TZDateTime.now(tz.local).hour.toString());
-    NotificationDetails details = const NotificationDetails(
+    log('tz local name: ${tz.local.name}');
+    final String currentTimeZone = await FlutterTimezone.getLocalTimezone();
+    log('current timezone: $currentTimeZone');
+    tz.setLocalLocation(tz.getLocation(currentTimeZone));
+    log('after - tz local name: ${tz.local.name}');
+    NotificationDetails details = NotificationDetails(
       android: AndroidNotificationDetails(
         'channelId Scheduled',
         'channelName Scheduled',
         channelDescription: 'channelDescription Scheduled',
         importance: Importance.max,
         priority: Priority.high,
-        sound: RawResourceAndroidNotificationSound('provider_new_order'),
+        // sound: RawResourceAndroidNotificationSound('provider_new_order'),
+        sound: RawResourceAndroidNotificationSound(
+            'provider_new_order.mp3'.split('.').first),
       ),
-      iOS: DarwinNotificationDetails(),
+      iOS: const DarwinNotificationDetails(),
     );
 
     //tz.initializeTimeZones();
